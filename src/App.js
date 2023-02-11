@@ -1,25 +1,29 @@
-import logo from './logo.svg';
-import './App.css';
+import { useAuth0 } from '@auth0/auth0-react';
+import React from 'react'
 
-function App() {
+const App = () => {
+  const { loginWithRedirect } = useAuth0();
+  const { logout } = useAuth0();
+  const { user, isAuthenticated } = useAuth0();
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div style={{ display: 'flex', justifyContent: 'center', alignContent: 'center', alignItems: 'center', width: '100vw', height: '100vh' }}>
+      {
+        isAuthenticated
+          ?
+          <div>
+            <div>
+              <img src={user.picture} alt={user.name} />
+              <h2>{user.name}</h2>
+              <p>{user.email}</p>
+            </div>
+            <button style={{ padding: '15px', backgroundColor: 'purple', color: 'white', fontSize: '20px', borderRadius: '5px' }} onClick={() => logout({ logoutParams: { returnTo: window.location.origin } })}>Log Out</button>
+          </div>
+          :
+          <button style={{ padding: '15px', backgroundColor: 'purple', color: 'white', fontSize: '20px', borderRadius: '5px' }} onClick={() => loginWithRedirect()}>Log In</button>
+      }
     </div>
-  );
+  )
 }
 
-export default App;
+export default App
